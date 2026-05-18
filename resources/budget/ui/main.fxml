@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="budget.ui.MainController"
+            prefWidth="900" prefHeight="600">
+
+    <!-- TOP: income / expenses / balance stat cards -->
+    <top>
+        <VBox style="-fx-background-color: #f8f8f8; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;">
+            <HBox spacing="40" alignment="CENTER" style="-fx-padding: 14 20 14 20;">
+                <VBox alignment="CENTER">
+                    <Label text="Income" style="-fx-text-fill: #666; -fx-font-size: 12;"/>
+                    <Label fx:id="labelIncome" text="$0.00"
+                           style="-fx-font-size: 22; -fx-text-fill: #27500A; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox alignment="CENTER">
+                    <Label text="Expenses" style="-fx-text-fill: #666; -fx-font-size: 12;"/>
+                    <Label fx:id="labelExpenses" text="$0.00"
+                           style="-fx-font-size: 22; -fx-text-fill: #A32D2D; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox alignment="CENTER">
+                    <Label text="Balance" style="-fx-text-fill: #666; -fx-font-size: 12;"/>
+                    <Label fx:id="labelBalance" text="$0.00"
+                           style="-fx-font-size: 22; -fx-text-fill: #185FA5; -fx-font-weight: bold;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="labelStatus" text="" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER: transaction table on the left, pie chart on the right -->
+    <center>
+        <HBox spacing="0">
+            <TableView fx:id="tableView" HBox.hgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colType"     text="Type"        prefWidth="80"/>
+                    <TableColumn fx:id="colDesc"     text="Description" prefWidth="200"/>
+                    <TableColumn fx:id="colCategory" text="Category"    prefWidth="110"/>
+                    <TableColumn fx:id="colAmount"   text="Amount"      prefWidth="90"/>
+                    <TableColumn fx:id="colDate"     text="Date"        prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <PieChart fx:id="pieChart" prefWidth="240" title="By Category"
+                      style="-fx-border-color: #ddd; -fx-border-width: 0 0 0 1;"/>
+        </HBox>
+    </center>
+
+    <!-- BOTTOM: add-transaction form -->
+    <bottom>
+        <VBox spacing="8"
+              style="-fx-background-color: #f8f8f8; -fx-border-color: #ddd;
+                     -fx-border-width: 1 0 0 0; -fx-padding: 12 20 12 20;">
+            <Label text="Add transaction" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <!-- ToggleGroup is wired in initialize() — no $ reference needed -->
+                <RadioButton fx:id="radioExpense" text="Expense" selected="true"/>
+                <RadioButton fx:id="radioIncome"  text="Income"/>
+
+                <TextField  fx:id="fieldAmount"      promptText="Amount ($)"    prefWidth="100"/>
+                <ComboBox   fx:id="comboCategory"                               prefWidth="130"/>
+                <TextField  fx:id="fieldDescription" promptText="Description"   prefWidth="180"/>
+                <DatePicker fx:id="datePicker"                                  prefWidth="140"/>
+
+                <Button text="Add"    onAction="#handleAdd"
+                        style="-fx-background-color: #378ADD; -fx-text-fill: white;"/>
+                <Button text="Delete" onAction="#handleDelete"
+                        style="-fx-background-color: #E24B4A; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

@@ -1,21 +1,22 @@
-// stole this from the module 7 lab 
-// please do change this if it doesn't fit, I'm just throwing stuff in here
+package budget.ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Entry point for the JavaFX application.
+ * Module 7: extends Application, loads FXML, shows the window.
+ */
 public class BudgetTrackerApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                BudgetTrackerApp.class.getResource( /*have to change this later: "/view/game-client.fxml" */ )
+                getClass().getResource("/budget/ui/main.fxml")
         );
-
-        Scene scene = new Scene(loader.load(), 760, 540);
-
+        Scene scene = new Scene(loader.load(), 900, 600);
         stage.setTitle("Budget Tracker");
         stage.setScene(scene);
         stage.show();

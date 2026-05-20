@@ -5,11 +5,8 @@ import budgettracker.models.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-// Module 4: File I/O — saves and loads transactions from a CSV file
-// Module 6: Collections — stores transactions in an ArrayList
 public class TransactionRepository implements Repository<Transaction, Integer> {
 
     private final List<Transaction> transactions = new ArrayList<>();
@@ -21,17 +18,20 @@ public class TransactionRepository implements Repository<Transaction, Integer> {
 
     @Override
     public void add(Transaction t) {
+        // adding transactions to the ArrayList
         transactions.add(t);
     }
 
     @Override
     public void remove(Integer id) {
+        // using getId() from Transaction.java to remove transactions
         boolean removed = transactions.removeIf(t -> t.getId() == id);
-        if (!removed) throw new TransactionNotFoundException(id); // Module 4: custom exception
+        if (!removed) { throw new TransactionNotFoundException(id); }
     }
 
     @Override
     public Transaction findById(Integer id) {
+        // using getId() from Transaction.java to identify a specific transaction
         return transactions.stream()
                 .filter(t -> t.getId() == id)
                 .findFirst()
@@ -40,13 +40,13 @@ public class TransactionRepository implements Repository<Transaction, Integer> {
 
     @Override
     public List<Transaction> findAll() {
-        return new ArrayList<>(transactions); // return a copy so the internal list stays safe
-    }
+        // returning a copy
+        return new ArrayList<>(transactions);
 
-    // Module 4: File I/O — write each transaction as a CSV line
-    // Format: TYPE,amount,description,date,category
+    // writes each transaction as a CSV line
     public void saveToFile() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // Format: type,amount,description,date,category
             for (Transaction t : transactions) {
                 String type = (t instanceof Income) ? "INCOME" : "EXPENSE";
                 writer.write(type + "," + t.getAmount() + "," + t.getDescription()
@@ -56,23 +56,23 @@ public class TransactionRepository implements Repository<Transaction, Integer> {
         }
     }
 
-    // Module 4: File I/O — read each line and recreate the correct Transaction subclass
+    // reaches each line and recreates the correct Transaction subclass
     public void loadFromFile() throws IOException {
         File file = new File(filePath);
-        if (!file.exists()) return; // nothing to load yet, that's fine
+        if (!file.exists()) return; 
 
         transactions.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",", 5);
-                if (parts.length < 5) continue; // skip malformed lines
+                if (parts.length < 5) { continue; } // skips malformed lines
 
-                String type        = parts[0];
-                double amount      = Double.parseDouble(parts[1]);
+                String type = parts[0];
+                double amount = Double.parseDouble(parts[1]);
                 String description = parts[2];
-                LocalDate date     = LocalDate.parse(parts[3]);
-                Category category  = Category.valueOf(parts[4]);
+                LocalDate date = LocalDate.parse(parts[3]);
+                Category category = Category.valueOf(parts[4]);
 
                 if (type.equals("INCOME")) {
                     transactions.add(new Income(amount, description, date, category));

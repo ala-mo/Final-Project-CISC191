@@ -1,6 +1,6 @@
 package budgettracker.models;
 
-// Module 1: OO Refresh — simple enum used throughout the app
+// lists the enum used throughout the app
 public enum Category {
     FOOD,
     RENT,

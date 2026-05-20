@@ -16,26 +16,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-// Module 7: JavaFX Controller — handles all UI events using lambda event handlers.
-// Uses MVC-style separation: this class only deals with UI, FinanceService does the math.
+// user interface
 public class BudgetController {
 
-    // --- FXML fields (linked to main-view.fxml) ---
+    // FXML fields (linked to main-view.fxml)
     @FXML private TableView<Transaction> transactionTable;
-    @FXML private TableColumn<Transaction, Integer>   colId;
-    @FXML private TableColumn<Transaction, String>    colType;
-    @FXML private TableColumn<Transaction, String>    colDesc;
-    @FXML private TableColumn<Transaction, Double>    colAmount;
-    @FXML private TableColumn<Transaction, String>    colCategory;
+    @FXML private TableColumn<Transaction, Integer> colId;
+    @FXML private TableColumn<Transaction, String> colType;
+    @FXML private TableColumn<Transaction, String> colDesc;
+    @FXML private TableColumn<Transaction, Double> colAmount;
+    @FXML private TableColumn<Transaction, String> colCategory;
     @FXML private TableColumn<Transaction, LocalDate> colDate;
 
-    @FXML private TextField     amountField;
-    @FXML private TextField     descField;
-    @FXML private ComboBox<Category>  categoryBox;
-    @FXML private DatePicker    datePicker;
-    @FXML private RadioButton   incomeRadio;
-    @FXML private RadioButton   expenseRadio;
-    @FXML private ToggleGroup   typeGroup;
+    @FXML private TextField amountField;
+    @FXML private TextField descField;
+    @FXML private ComboBox<Category> categoryBox;
+    @FXML private DatePicker datePicker;
+    @FXML private RadioButton incomeRadio;
+    @FXML private RadioButton expenseRadio;
+    @FXML private ToggleGroup typeGroup;
 
     @FXML private Label balanceLabel;
     @FXML private TextArea reportArea;
@@ -45,7 +44,7 @@ public class BudgetController {
     private TransactionRepository repo;
     private final ObservableList<Transaction> tableData = FXCollections.observableArrayList();
 
-    // Called from BudgetTrackerApp after FXML loads
+    // called from BudgetTrackerApp after FXML loads
     public void init(FinanceService service, TransactionRepository repo) {
         this.service = service;
         this.repo = repo;
@@ -55,7 +54,7 @@ public class BudgetController {
         updateBalance();
     }
 
-    // Wire up table columns
+    // setting up table columns
     private void setupTable() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
@@ -63,13 +62,13 @@ public class BudgetController {
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-        // Module 7: Lambda — dynamically show "Income" or "Expense" in the Type column
+        // dynamically shows "Income" or "Expense" in the Type Column
         colType.setCellValueFactory(data -> {
             String type = (data.getValue() instanceof Income) ? "Income" : "Expense";
             return new javafx.beans.property.SimpleStringProperty(type);
         });
 
-        // Module 7: Lambda — color income rows green, expense rows red
+        // colors income rows green and expense rows red
         transactionTable.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Transaction t, boolean empty) {
@@ -93,27 +92,26 @@ public class BudgetController {
         datePicker.setValue(LocalDate.now());
     }
 
-    // --- Event Handlers (wired via FXML onAction) ---
-
+    // event handlers (wired via FXML onAction)
     @FXML
     private void handleAddTransaction() {
         try {
-            double amount      = Double.parseDouble(amountField.getText().trim());
+            double amount = Double.parseDouble(amountField.getText().trim());
             String description = descField.getText().trim();
-            LocalDate date     = datePicker.getValue();
-            Category category  = categoryBox.getValue();
+            LocalDate date = datePicker.getValue();
+            Category category = categoryBox.getValue();
 
-            if (description.isEmpty()) throw new IllegalArgumentException("Description cannot be empty.");
-            if (date == null)          throw new IllegalArgumentException("Please select a date.");
-            if (category == null)      throw new IllegalArgumentException("Please select a category.");
+            if (description.isEmpty()) { throw new IllegalArgumentException("Description cannot be empty."); }
+            if (date == null) { throw new IllegalArgumentException("Please select a date."); }
+            if (category == null) { throw new IllegalArgumentException("Please select a category."); }
 
-            // Module 3: Polymorphism — create the right subclass based on the radio button
+            // creating the right subclass based on the radio button
             Transaction t = incomeRadio.isSelected()
                     ? new Income(amount, description, date, category)
                     : new Expense(amount, description, date, category);
 
             service.addTransaction(t);
-            saveAsync(); // Module 7: background thread for file I/O
+            saveAsync(); // background thread for file I/O
             refreshTable();
             updateBalance();
             clearForm();
@@ -144,7 +142,7 @@ public class BudgetController {
     private void handleGenerateReport() {
         reportArea.setText(service.generateReport());
 
-        // Also show spending by category
+        // shows spending by category
         Map<Category, Double> spending = service.getSpendingByCategory();
         StringBuilder sb = new StringBuilder(service.generateReport());
         sb.append("\n\n--- Spending by Category ---\n");
@@ -161,8 +159,8 @@ public class BudgetController {
 
     @FXML
     private void handleFilterExpenses() {
-        // Module 2: Functional Interface — passing a lambda as a Predicate<Transaction>
-        List<Transaction> expenses = service.filterTransactions(t -> t instanceof Expense);
+        // passes a lambda as a Predicate<Transaction>
+        List<Transaction> expenses = sandlervice.filterTransactions(t -> t instanceof Expense);
         tableData.setAll(expenses);
         setStatus("Showing expenses only. Click 'Show All' to reset.");
     }
@@ -180,8 +178,7 @@ public class BudgetController {
         setStatus("Showing all transactions.");
     }
 
-    // --- Helpers ---
-
+    // helper method
     private void refreshTable() {
         tableData.setAll(service.getAllTransactions());
     }
@@ -203,9 +200,9 @@ public class BudgetController {
         statusLabel.setText(message);
     }
 
-    // Module 7: Multithreading — file saves happen on a background thread so the UI stays responsive
+    // saves files on a background thread
     private void saveAsync() {
-        Task<Void> saveTask = new Task<>() {
+        Task<Void> saveTask = new Task<>() { 
             @Override
             protected Void call() throws Exception {
                 repo.saveToFile();

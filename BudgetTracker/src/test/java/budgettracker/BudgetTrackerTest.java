@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// One test file, one test per module topic, clearly labeled.
 class BudgetTrackerTest {
 
     private TransactionRepository repo;
@@ -24,35 +23,32 @@ class BudgetTrackerTest {
 
     @BeforeEach
     void setUp() {
-        Transaction.resetIdCounter(); // keep IDs predictable across tests
+        Transaction.resetIdCounter(); 
+        // keep IDs predictable across tests
         repo = new TransactionRepository("test-data.csv");
         service = new FinanceService(repo);
     }
 
-    // =========================================================================
     // MODULE 1: Arrays + OO
-    // Tests Budget's parallel array structure for per-category limits.
-    // =========================================================================
+    // testing parallel array structure in Budget.java for per-category limits
     @Test
     @DisplayName("Module 1 – Budget correctly detects exceeded category limit")
     void testBudgetArrayLimits() {
         Budget budget = new Budget();
         budget.setLimit(Category.FOOD, 200.0);
 
-        // Under the limit — not exceeded
+        // under the limit — not exceeded
         assertFalse(budget.isExceeded(Category.FOOD, 150.0));
 
-        // Over the limit — exceeded
+        // over the limit — exceeded
         assertTrue(budget.isExceeded(Category.FOOD, 250.0));
 
-        // No limit set — never exceeded
+        // no limit set — never exceeded
         assertFalse(budget.isExceeded(Category.RENT, 9999.0));
     }
 
-    // =========================================================================
     // MODULE 2: OO Design + Functional Interfaces
-    // Tests filterTransactions() with a Predicate lambda.
-    // =========================================================================
+    // testing filterTransactions() in FinanceService.java with a Predicate lambda
     @Test
     @DisplayName("Module 2 – filterTransactions() works with a Predicate lambda")
     void testFunctionalInterfaceFilter() {
@@ -60,41 +56,39 @@ class BudgetTrackerTest {
         service.addTransaction(new Income(1000.0, "Paycheck", TODAY, Category.INCOME));
         service.addTransaction(new Expense(20.0, "Bus pass", TODAY, Category.TRANSPORTATION));
 
-        // Pass a lambda as the Predicate — only keep Expense instances
+        // passing a lambda as the Predicate — only keeping Expense instances
         List<Transaction> expenses = service.filterTransactions(t -> t instanceof Expense);
         assertEquals(2, expenses.size());
 
-        // Filter by category
+        // filtering by category
         List<Transaction> food = service.filterTransactions(t -> t.getCategory() == Category.FOOD);
         assertEquals(1, food.size());
         assertEquals("Groceries", food.get(0).getDescription());
     }
 
-    // =========================================================================
     // MODULE 3: Inheritance + Polymorphism
-    // Tests that Expense and Income behave differently via getSignedAmount().
-    // =========================================================================
+    // testing getSignedAmount() to check that Expense.java and Income.java behave differently
     @Test
     @DisplayName("Module 3 – Expense and Income return correct signed amounts (polymorphism)")
     void testPolymorphism() {
         Transaction expense = new Expense(100.0, "Rent", TODAY, Category.RENT);
         Transaction income  = new Income(500.0, "Salary", TODAY, Category.INCOME);
 
-        // Both are Transaction references, but different behavior
+        // testing the different behavior in both Expense.java and Income.java
         assertEquals(-100.0, expense.getSignedAmount(), 0.001);
         assertEquals(+500.0, income.getSignedAmount(), 0.001);
 
-        // Comparable: same date should return 0
+        // using compareTo() from Transaction.java; same date should return 0
         assertEquals(0, expense.compareTo(income));
     }
 
-    // =========================================================================
     // MODULE 4: Exceptions + File I/O
-    // Tests custom exception and CSV save/load round-trip.
-    // =========================================================================
+    // testing custom exception TransactionNotFoundException
+    // testing the CSV save/load round-trip from saveToFile() and loadFromFile() in TransactionRepository.java
     @Test
     @DisplayName("Module 4 – TransactionNotFoundException thrown for missing ID")
     void testCustomException() {
+        // testing custom exception TransactionNotFoundException
         assertThrows(TransactionNotFoundException.class, () -> service.removeTransaction(999));
     }
 
@@ -106,7 +100,7 @@ class BudgetTrackerTest {
 
         repo.saveToFile();
 
-        // Load into a fresh repository
+        // loading into a fresh repository
         TransactionRepository freshRepo = new TransactionRepository("test-data.csv");
         freshRepo.loadFromFile();
 
@@ -115,16 +109,16 @@ class BudgetTrackerTest {
         assertEquals("Electricity", loaded.get(0).getDescription());
         assertEquals(75.0, loaded.get(0).getAmount(), 0.001);
 
-        Files.deleteIfExists(Path.of("test-data.csv")); // clean up
+        // cleaning up
+        Files.deleteIfExists(Path.of("test-data.csv"));
     }
 
-    // =========================================================================
     // MODULE 5: Recursion + Algorithms
-    // Tests recursiveSum() and sortByDate().
-    // =========================================================================
+    // testing recursiveSum() and sortByDate() in FinanceService.java
     @Test
     @DisplayName("Module 5 – recursiveSum() correctly totals signed amounts")
     void testRecursiveSum() {
+        // testing recursiveSum()
         List<Transaction> list = List.of(
                 new Income(500.0, "Salary", TODAY, Category.INCOME),
                 new Expense(100.0, "Rent", TODAY, Category.RENT),
@@ -132,12 +126,14 @@ class BudgetTrackerTest {
         );
 
         double result = service.recursiveSum(list, 0);
-        assertEquals(350.0, result, 0.001); // 500 - 100 - 50 = 350
+        assertEquals(350.0, result, 0.001); 
+        // 500 - 100 - 50 = 350
     }
 
     @Test
     @DisplayName("Module 5 – sortByDate() returns transactions in chronological order")
     void testSortByDate() {
+        // testing sortByDate()
         LocalDate jan = LocalDate.of(2025, 1, 1);
         LocalDate mar = LocalDate.of(2025, 3, 15);
         LocalDate feb = LocalDate.of(2025, 2, 10);
@@ -152,13 +148,12 @@ class BudgetTrackerTest {
         assertEquals("March",    sorted.get(2).getDescription());
     }
 
-    // =========================================================================
     // MODULE 6: Collections + Generics + Streams
-    // Tests getSpendingByCategory() which uses stream + groupingBy.
-    // =========================================================================
+    // testing getSpendingByCategory() and calculateBalance() in FinanceService.java
     @Test
     @DisplayName("Module 6 – getSpendingByCategory() groups and sums correctly")
     void testSpendingByCategory() {
+        // testing getSpendingByCategory()
         service.addTransaction(new Expense(50.0, "Pizza", TODAY, Category.FOOD));
         service.addTransaction(new Expense(30.0, "Burger", TODAY, Category.FOOD));
         service.addTransaction(new Expense(100.0, "Rent", TODAY, Category.RENT));
@@ -173,21 +168,20 @@ class BudgetTrackerTest {
     @Test
     @DisplayName("Module 6 – calculateBalance() uses streams to sum signed amounts")
     void testCalculateBalance() {
+        // testing calculateBalance()
         service.addTransaction(new Income(1000.0, "Job", TODAY, Category.INCOME));
         service.addTransaction(new Expense(400.0, "Rent", TODAY, Category.RENT));
         service.addTransaction(new Expense(100.0, "Food", TODAY, Category.FOOD));
 
         assertEquals(500.0, service.calculateBalance(), 0.001);
     }
-
-    // =========================================================================
+    
     // MODULE 7: JavaFX + Events + Lambdas
-    // JavaFX controllers can't be unit-tested without a toolkit, so we test
-    // the non-UI logic that supports the UI: generateReport().
-    // =========================================================================
+    // testing generateReport() in FinanceService.java
     @Test
     @DisplayName("Module 7 – generateReport() returns a correctly formatted summary")
     void testGenerateReport() {
+        // testing generateReport()
         service.addTransaction(new Income(1000.0, "Salary", TODAY, Category.INCOME));
         service.addTransaction(new Expense(300.0, "Rent", TODAY, Category.RENT));
 

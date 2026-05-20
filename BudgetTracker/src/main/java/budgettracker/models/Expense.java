@@ -2,17 +2,17 @@ package budgettracker.models;
 
 import java.time.LocalDate;
 
-// Module 3: Inheritance — Expense extends Transaction.
-// getSignedAmount() returns a negative value because expenses reduce your balance.
 public class Expense extends Transaction {
 
+    // references these fields from Transaction.java
     public Expense(double amount, String description, LocalDate date, Category category) {
         super(amount, description, date, category);
     }
 
     @Override
     public double getSignedAmount() {
-        return -getAmount(); // expenses subtract from balance
+        // expenses subtracted from balance
+        return -getAmount();
     }
 
     @Override

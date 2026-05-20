@@ -1,6 +1,5 @@
 package budgettracker.models;
 
-// Module 1: OO Refresh — simple encapsulated model with validation in the constructor
 public class User {
 
     private final String username;
@@ -9,9 +8,11 @@ public class User {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty.");
         }
+
         this.username = username.trim();
     }
 
+    // getter method
     public String getUsername() { return username; }
 
     @Override

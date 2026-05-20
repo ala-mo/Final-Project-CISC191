@@ -38,11 +38,3 @@ All tests are in `src/test/java/budgettracker/BudgetTrackerTest.java`.
 | Module 7 | JavaFX + Events + Lambdas | `BudgetTrackerApp` + `BudgetController` + `main-view.fxml` — full JavaFX MVC; lambda event handlers; `TableRow` color coding via lambda; background save thread using `Task<Void>` |
 
 ---
-
-## Reflection
-
-**What I'm most proud of:**
-The `filterTransactions(Predicate<Transaction>)` method in `FinanceService` is a clean demonstration of Module 2 — it accepts any lambda so the UI can filter by type, category, date, or anything else without changing the service code. The polymorphic `getSignedAmount()` design also makes `calculateBalance()` dead simple.
-
-**What I would improve with more time:**
-I'd add a proper budget limit UI where users can set per-category limits and see visual warnings when they're exceeded. I'd also add a chart (JavaFX `PieChart` or `BarChart`) to visualize spending by category, and improve the CSV format to use a proper database (SQLite via JDBC) for more robustness.

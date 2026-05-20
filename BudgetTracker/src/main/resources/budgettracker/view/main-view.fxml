@@ -4,13 +4,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<!-- Module 7: JavaFX FXML layout. Controller is BudgetController. -->
+<!-- JavaFX FXML layout -->
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="budgettracker.ui.BudgetController"
             prefWidth="860" prefHeight="600"
             style="-fx-font-family: 'Segoe UI', sans-serif; -fx-background-color: #f4f6f8;">
 
-    <!-- TOP: Title bar + balance -->
+    <!-- TOP: title bar + balance -->
     <top>
         <HBox style="-fx-background-color: #2c3e50; -fx-padding: 12 20;" alignment="CENTER_LEFT" spacing="20">
             <Label text="💰 Budget Tracker"
@@ -21,10 +21,10 @@
         </HBox>
     </top>
 
-    <!-- CENTER: Transaction table + report area -->
+    <!-- CENTER: transaction table + report area -->
     <center>
         <VBox spacing="10" style="-fx-padding: 15;">
-            <!-- Filter / sort buttons -->
+            <!-- filter / sort buttons -->
             <HBox spacing="8">
                 <Button text="Show All"        onAction="#handleShowAll"        style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
                 <Button text="Expenses Only"   onAction="#handleFilterExpenses" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
@@ -46,14 +46,14 @@
                 <placeholder><Label text="No transactions yet. Add one below!"/></placeholder>
             </TableView>
 
-            <!-- Report area (hidden until report is generated) -->
+            <!-- report area -->
             <TextArea fx:id="reportArea" prefRowCount="5" editable="false" wrapText="true"
                       promptText="Click 'Generate Report' to see your summary..."
                       style="-fx-font-family: monospace;"/>
         </VBox>
     </center>
 
-    <!-- RIGHT: Add transaction form -->
+    <!-- RIGHT: adding transaction form -->
     <right>
         <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(gaussian, #ccc, 8, 0, -2, 0);"
               prefWidth="240">

@@ -33,7 +33,7 @@
                 <Button text="Generate Report" onAction="#handleGenerateReport" style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
             </HBox>
 
-            <!-- transaction Table -->
+            <!-- Transaction Table -->
             <TableView fx:id="transactionTable" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colId"       text="ID"          prefWidth="40"/>

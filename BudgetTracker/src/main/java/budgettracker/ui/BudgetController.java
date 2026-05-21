@@ -160,7 +160,7 @@ public class BudgetController {
     @FXML
     private void handleFilterExpenses() {
         // passes a lambda as a Predicate<Transaction>
-        List<Transaction> expenses = sandlervice.filterTransactions(t -> t instanceof Expense);
+        List<Transaction> expenses = service.filterTransactions(t -> t instanceof Expense);
         tableData.setAll(expenses);
         setStatus("Showing expenses only. Click 'Show All' to reset.");
     }

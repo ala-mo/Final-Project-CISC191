@@ -42,6 +42,7 @@ public class TransactionRepository implements Repository<Transaction, Integer> {
     public List<Transaction> findAll() {
         // returning a copy
         return new ArrayList<>(transactions);
+    }
 
     // writes each transaction as a CSV line
     public void saveToFile() throws IOException {

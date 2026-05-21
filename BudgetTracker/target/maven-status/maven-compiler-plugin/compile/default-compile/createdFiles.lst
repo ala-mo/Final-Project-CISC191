@@ -2,8 +2,10 @@ budgettracker\models\Category.class
 budgettracker\ui\BudgetTrackerApp.class
 budgettracker\ui\BudgetController.class
 budgettracker\ui\BudgetController$2.class
+budgettracker\models\Budget.class
 budgettracker\models\Expense.class
 budgettracker\models\Income.class
+budgettracker\exceptions\TransactionNotFoundException.class
 budgettracker\models\User.class
 budgettracker\ui\BudgetController$1.class
 budgettracker\persistence\Repository.class

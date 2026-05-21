@@ -45,7 +45,7 @@ public class FinanceService {
                 ));
     }
 
-    // calculates the current balance
+    // calculates current balance
     public double calculateBalance() {
         return repository.findAll().stream()
                 .mapToDouble(Transaction::getSignedAmount)
